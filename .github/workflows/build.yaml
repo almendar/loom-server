@@ -1,11 +1,9 @@
---
 name: build
-
 on:
   push:
-    branches: [main]
+    branches: [ main ]
   pull_request:
-    branches: [main]
+    branches: [ main ]
 
 jobs:
   build:
@@ -13,11 +11,14 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: |
-        download_url="https://download.java.net/java/early_access/jdk19/26/GPL/openjdk-19-ea+26_linux-x64_bin.tar.gz"
-        wget -O $RUNNER_TEMP/java_package.tar.gz $download_url
+          download_url="https://download.java.net/java/early_access/jdk19/26/GPL/openjdk-19-ea+26_linux-x64_bin.tar.gz"
+          wget -O $RUNNER_TEMP/java_package.tar.gz $download_url
       - uses: actions/setup-java@v3
         with:
           distribution: 'jdkfile'
           jdkFile: ${{ runner.temp }}/java_package.tar.gz
           java-version: '19.0.0'
           architecture: x64
+      - name: Build with Maven
+        run: mvn -B package --file pom.xml
+
